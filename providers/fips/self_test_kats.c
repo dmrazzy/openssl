@@ -162,8 +162,7 @@ static int add_params(OSSL_PARAM_BLD *bld, const ST_KAT_PARAM *params,
 
     if (params == NULL)
         return 1;
-    for (p = params; p->data != NULL; ++p)
-    {
+    for (p = params; p->data != NULL; ++p) {
         switch (p->type) {
         case OSSL_PARAM_UNSIGNED_INTEGER: {
             BIGNUM *bn = BN_CTX_get(ctx);
@@ -489,8 +488,7 @@ static int self_test_sign(const ST_KAT_SIGN *t,
 
     /* Create a EVP_PKEY_CTX to use for the signing operation */
     sctx = EVP_PKEY_CTX_new_from_pkey(libctx, pkey, NULL);
-    if (sctx == NULL
-        || EVP_PKEY_sign_init(sctx) <= 0)
+    if (sctx == NULL)
         goto err;
 
     /* set signature parameters */
@@ -499,11 +497,20 @@ static int self_test_sign(const ST_KAT_SIGN *t,
                                          strlen(t->mdalgorithm) + 1))
         goto err;
     params_sig = OSSL_PARAM_BLD_to_param(bld);
-    if (EVP_PKEY_CTX_set_params(sctx, params_sig) <= 0)
-        goto err;
 
-    if (EVP_PKEY_sign(sctx, sig, &siglen, dgst, sizeof(dgst)) <= 0
-        || EVP_PKEY_verify_init(sctx) <= 0
+    /* Skip the sign for legacy algorithms that only support the verify operation */
+    if (OSSL_PARAM_locate(params, ST_PARAM_VERIFY_ONLY) == NULL) {
+        if (EVP_PKEY_sign_init(sctx) <= 0)
+            goto err;
+        if (EVP_PKEY_CTX_set_params(sctx, params_sig) <= 0)
+            goto err;
+        if (EVP_PKEY_sign(sctx, sig, &siglen, dgst, sizeof(dgst)) <= 0)
+            goto err;
+    } else {
+        memcpy(sig, t->sig_expected, t->sig_expected_len);
+        siglen = t->sig_expected_len;
+    }
+    if (EVP_PKEY_verify_init(sctx) <= 0
         || EVP_PKEY_CTX_set_params(sctx, params_sig) <= 0)
         goto err;
 

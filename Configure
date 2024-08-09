@@ -471,11 +471,13 @@ my @disablables = (
     "filenames",
     "fips",
     "fips-securitychecks",
+    "fips-post",
     "fuzz-afl",
     "fuzz-libfuzzer",
     "gost",
     "http",
     "idea",
+    "jitter",
     "ktls",
     "legacy",
     "loadereng",
@@ -586,6 +588,7 @@ our %disabled = ( # "what"         => "comment"
                   "fuzz-afl"            => "default",
                   "fuzz-libfuzzer"      => "default",
                   "pie"                 => "default",
+                  "jitter"              => "default",
                   "ktls"                => "default",
                   "md2"                 => "default",
                   "msan"                => "default",
@@ -686,7 +689,7 @@ my @disable_cascades = (
 
     "cmp"               => [ "crmf" ],
 
-    "fips"              => [ "fips-securitychecks", "acvp-tests" ],
+    "fips"              => [ "fips-securitychecks", "fips-post", "acvp-tests" ],
 
     "threads"           => [ "thread-pool" ],
     "thread-pool"       => [ "default-thread-pool" ],
@@ -1019,6 +1022,14 @@ while (@argvcopy)
                         {
                         $config{openssldir}=$1;
                         }
+                elsif (/^--with-jitter-include=(.*)$/)
+                        {
+                        $withargs{jitter_include}=$1;
+                        }
+                elsif (/^--with-jitter-lib=(.*)$/)
+                        {
+                        $withargs{jitter_lib}=$1;
+                        }
                 elsif (/^--with-zlib-lib=(.*)$/)
                         {
                         $withargs{zlib_lib}=$1;
@@ -1311,10 +1322,14 @@ if (scalar(grep { $_ eq 'none' } @seed_sources) > 0) {
 
 ============================== WARNING ===============================
 You have selected the --with-rand-seed=none option, which effectively
-disables automatic reseeding of the OpenSSL random generator.
+disables automatic reseeding of the OpenSSL SEED-SRC random generator.
 All operations depending on the random generator such as creating keys
 will not work unless the random generator is seeded manually by the
 application.
+
+Instead of manually seeding, a different random generator can be set
+at runtime in openssl.cnf or configured at build time with
+-DOPENSSL_DEFAULT_SEED_SRC.
 
 Please read the 'Note on random number generation' section in the
 INSTALL.md instructions and the RAND_DRBG(7) manual page for more

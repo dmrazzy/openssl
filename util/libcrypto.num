@@ -5649,6 +5649,7 @@ X509_ACERT_verify                       ?	3_4_0	EXIST::FUNCTION:
 X509_ACERT_get_ext_d2i                  ?	3_4_0	EXIST::FUNCTION:
 X509_ACERT_add1_ext_i2d                 ?	3_4_0	EXIST::FUNCTION:
 X509_ACERT_get0_extensions              ?	3_4_0	EXIST::FUNCTION:
+X509v3_add_extensions                   ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_VALUE_it          ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_VALUE_free        ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_VALUE_new         ?	3_4_0	EXIST::FUNCTION:
@@ -5663,6 +5664,13 @@ OSSL_IETF_ATTR_SYNTAX_get_value_num     ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_get0_value        ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_add1_value        ?	3_4_0	EXIST::FUNCTION:
 OSSL_IETF_ATTR_SYNTAX_print             ?	3_4_0	EXIST::FUNCTION:
+PKCS12_set_pbmac1_pbkdf2                ?	3_4_0	EXIST::FUNCTION:
+PBMAC1_get1_pbkdf2_param                ?	3_4_0	EXIST::FUNCTION:
+d2i_PBMAC1PARAM                         ?	3_4_0	EXIST::FUNCTION:
+i2d_PBMAC1PARAM                         ?	3_4_0	EXIST::FUNCTION:
+PBMAC1PARAM_free                        ?	3_4_0	EXIST::FUNCTION:
+PBMAC1PARAM_new                         ?	3_4_0	EXIST::FUNCTION:
+PBMAC1PARAM_it                          ?	3_4_0	EXIST::FUNCTION:
 X509_ACERT_add_attr_nconf               ?	3_4_0	EXIST::FUNCTION:
 OSSL_LIB_CTX_get_conf_diagnostics       ?	3_4_0	EXIST::FUNCTION:
 OSSL_LIB_CTX_set_conf_diagnostics       ?	3_4_0	EXIST::FUNCTION:
@@ -5699,3 +5707,12 @@ i2d_OSSL_USER_NOTICE_SYNTAX             ?	3_4_0	EXIST::FUNCTION:
 OSSL_USER_NOTICE_SYNTAX_free            ?	3_4_0	EXIST::FUNCTION:
 OSSL_USER_NOTICE_SYNTAX_new             ?	3_4_0	EXIST::FUNCTION:
 OSSL_USER_NOTICE_SYNTAX_it              ?	3_4_0	EXIST::FUNCTION:
+OSSL_INDICATOR_set_callback             ?	3_4_0	EXIST::FUNCTION:
+OSSL_INDICATOR_get_callback             ?	3_4_0	EXIST::FUNCTION:
+OPENSSL_strtoul                         ?	3_4_0	EXIST::FUNCTION:
+d2i_OSSL_BASIC_ATTR_CONSTRAINTS         ?	3_4_0	EXIST::FUNCTION:
+i2d_OSSL_BASIC_ATTR_CONSTRAINTS         ?	3_4_0	EXIST::FUNCTION:
+OSSL_BASIC_ATTR_CONSTRAINTS_free        ?	3_4_0	EXIST::FUNCTION:
+OSSL_BASIC_ATTR_CONSTRAINTS_new         ?	3_4_0	EXIST::FUNCTION:
+OSSL_BASIC_ATTR_CONSTRAINTS_it          ?	3_4_0	EXIST::FUNCTION:
+EVP_KEYMGMT_gen_gettable_params         ?	3_4_0	EXIST::FUNCTION:

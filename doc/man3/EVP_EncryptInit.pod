@@ -375,9 +375,13 @@ exists.
 
 Encrypts I<inl> bytes from the buffer I<in> and writes the encrypted version to
 I<out>. The pointers I<out> and I<in> may point to the same location, in which
-case the encryption will be done in-place. If I<out> and I<in> point to different
-locations, the two buffers must be disjoint, otherwise the operation might fail
-or the outcome might be undefined.
+case the encryption will be done in-place. However, in-place encryption is
+guaranteed to work only if the encryption context (I<ctx>) has processed data in
+multiples of the block size. If the context contains an incomplete data block
+from previous operations, in-place encryption will fail.
+
+If I<out> and I<in> point to different locations, the two buffers must be
+disjoint, otherwise the operation might fail or the outcome might be undefined.
 
 This function can be called multiple times to encrypt successive blocks
 of data. The amount of data written depends on the block alignment of the
@@ -729,6 +733,12 @@ Gets 1 if the cipher algorithm I<cipher> supports the gettable EVP_CIPHER_CTX
 parameter B<OSSL_CIPHER_PARAM_RANDOM_KEY>. Only DES and 3DES set this to 1,
 all other OpenSSL ciphers return 0.
 
+=item "decrypt-only" (B<OSSL_CIPHER_PARAM_DECRYPT_ONLY) <integer>
+
+Gets 1 if the cipher algorithm I<cipher> implementation supports only
+the decryption operation such as the 3DES ciphers in the fips provider.
+Otherwise gets 0 or the parameter might not be present at all.
+
 =back
 
 =head2 Gettable and Settable EVP_CIPHER_CTX parameters
@@ -889,6 +899,12 @@ Gets the result of running the "tls1multi_aad" operation.
 
 Used to pass the TLS MAC data.
 
+=item "fips-indicator" (B<OSSL_CIPHER_PARAM_FIPS_APPROVED_INDICATOR>) <integer>
+
+A getter that returns 1 if the operation is FIPS approved, or 0 otherwise.
+This may be used after calling a cipher final operation such as
+EVP_EncryptFinal_ex(). It may return 0 if the "encrypt-check" option is set to 0.
+
 =back
 
 =head2 Settable EVP_CIPHER_CTX parameters
@@ -1034,6 +1050,16 @@ The IEEE Std. 1619-2007 variant of SM4-XTS algorithm.
 =back
 
 The default value is "GB".
+
+=item "encrypt-check" (B<OSSL_CIPHER_PARAM_FIPS_ENCRYPT_CHECK>) <integer>
+
+If required this parameter should be set early via an cipher encrypt init
+function such as EVP_EncryptInit_ex2().
+The default value of 1 causes an error when an encryption operation is triggered.
+Setting this to 0 will ignore the error and set the approved "fips-indicator" to
+0.
+This option is used by the OpenSSL FIPS provider, and breaks FIPS compliance if
+set to 0.
 
 =back
 
